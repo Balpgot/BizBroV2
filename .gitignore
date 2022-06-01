@@ -3,8 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-!**/src/main/recources/api.properties
-!**/src/main/recources/aplication.properties
+!**/src/main/resources/api.properties
+!**/src/main/resources/aplication.properties
 
 
 ### STS ###
