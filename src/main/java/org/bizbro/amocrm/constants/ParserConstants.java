@@ -32,10 +32,21 @@ public interface ParserConstants {
         String NAME = "name";
         String CONTACTS = "contacts";
         String TAGS = "tags";
+        String NOTES = "notes";
 
         interface Contact {
             String ID = "id";
             String IS_MAIN = "is_main";
         }
+    }
+
+    interface Note {
+        String PARAMS = "params";
+        String TEXT = "text";
+    }
+
+    interface Tokens {
+        String ACCESS_TOKEN = "access_token";
+        String REFRESH_TOKEN = "refresh_token";
     }
 }

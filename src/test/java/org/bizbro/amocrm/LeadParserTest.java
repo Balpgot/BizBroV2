@@ -2,6 +2,7 @@ package org.bizbro.amocrm;
 
 import com.alibaba.fastjson.JSON;
 import org.bizbro.amocrm.model.Lead;
+import org.bizbro.amocrm.model.Note;
 import org.bizbro.amocrm.model.Tag;
 import org.bizbro.amocrm.parser.LeadParser;
 import org.junit.jupiter.api.Assertions;
@@ -43,13 +44,14 @@ public class LeadParserTest {
     void parse_lead_test(){
         Set<Tag> tagSet = Set.of(new Tag(12763L,"рассылка"),new Tag(83057L,"Добавлен"));
         Lead leadExample = Lead.builder()
-                .ID(Long.parseLong(("19030707")))
-                .NAME("\"ПОЖСТРОЙКОМПЛЕКТ\"")
-                .BUDGET(Integer.parseInt("830000"))
-                .CONTACT_ID(Long.parseLong("20662519"))
-                .TAGS(tagSet)
-                .VORONKA(Integer.parseInt("37851406"))
+                .id(Long.parseLong(("19030707")))
+                .name("\"ПОЖСТРОЙКОМПЛЕКТ\"")
+                .budget(Integer.parseInt("830000"))
+                .contactId(Long.parseLong("20662519"))
+                .tags(tagSet)
+                .voronka(Integer.parseInt("37851406"))
                 .build();
+        leadExample.setNotes(Set.of(new Note(leadExample, "10 пунктов лицензии, первичную документацию передают")));
         Lead lead = leadParser.parseLead(JSON.parseObject(leadResponse));
         Assertions.assertEquals(leadExample,lead);
     }

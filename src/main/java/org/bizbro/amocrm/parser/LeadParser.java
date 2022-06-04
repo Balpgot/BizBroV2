@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.NoArgsConstructor;
 import org.bizbro.amocrm.constants.ParserConstants;
 import org.bizbro.amocrm.model.Lead;
+import org.bizbro.amocrm.model.Note;
 import org.bizbro.amocrm.model.Tag;
 import org.bizbro.amocrm.repository.TagRepository;
+import org.bizbro.amocrm.service.AmoRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +20,12 @@ import java.util.Set;
 public class LeadParser {
 
     private TagRepository tagRepository;
+    private AmoRequestService requestService;
 
     @Autowired
-    public LeadParser(TagRepository tagRepository) {
+    public LeadParser(TagRepository tagRepository, AmoRequestService amoRequestService) {
         this.tagRepository = tagRepository;
+        this.requestService = amoRequestService;
     }
 
     public Lead parseLead(JSONObject leadJSON) {
@@ -30,14 +34,16 @@ public class LeadParser {
         JSONArray tags = embeddedData.getJSONArray(ParserConstants.Lead.TAGS);
         Long mainContact = parseMainContact(contacts);
         Set<Tag> tagSet = parseTags(tags);
-        return Lead.builder()
-                .ID(leadJSON.getLong(ParserConstants.Lead.ID))
-                .BUDGET(leadJSON.getInteger(ParserConstants.Lead.PRICE))
-                .NAME(leadJSON.getString(ParserConstants.Lead.NAME))
-                .CONTACT_ID(mainContact)
-                .TAGS(tagSet)
-                .VORONKA(leadJSON.getInteger(ParserConstants.Lead.VORONKA))
+        Lead lead = Lead.builder()
+                .id(leadJSON.getLong(ParserConstants.Lead.ID))
+                .budget(leadJSON.getInteger(ParserConstants.Lead.PRICE))
+                .name(leadJSON.getString(ParserConstants.Lead.NAME))
+                .contactId(mainContact)
+                .tags(tagSet)
+                .voronka(leadJSON.getInteger(ParserConstants.Lead.VORONKA))
                 .build();
+        lead.setNotes(getLeadNotes(lead));
+        return lead;
     }
 
     private Set<Tag> parseTags (JSONArray tags) {
@@ -52,6 +58,23 @@ public class LeadParser {
             tagSet.add(tag);
         }
         return tagSet;
+    }
+
+    private Set<Note> getLeadNotes(Lead lead){
+        JSONObject notesJSONObject =
+                requestService.getLeadNotes(String.valueOf(lead.getId()));
+        JSONArray notesJSONArray = notesJSONObject
+                .getJSONObject(ParserConstants.JSON.EMBEDDED_DATA)
+                .getJSONArray(ParserConstants.Lead.NOTES);
+        Set<Note> notes = new HashSet<>();
+        for (Object noteObj:notesJSONArray) {
+            JSONObject noteJSON = (JSONObject) noteObj;
+            String noteText = noteJSON
+                    .getJSONObject(ParserConstants.Note.PARAMS)
+                    .getString(ParserConstants.Note.TEXT);
+            notes.add(new Note(lead, noteText));
+        }
+        return notes;
     }
 
     private void addTagToDBIfNeeded (Tag tag){

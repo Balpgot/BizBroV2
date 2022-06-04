@@ -80,8 +80,8 @@ public class CompanyParser {
         for (Object customFieldObj : customFields) {
             JSONObject customField = (JSONObject) customFieldObj;
             customFieldsMap.put(
-                customField.getString(ParserConstants.JSON.FIELD_ID),
-                customField.getJSONArray(ParserConstants.JSON.CUSTOM_FIELD_VALUES)
+                    customField.getString(ParserConstants.JSON.FIELD_ID),
+                    customField.getJSONArray(ParserConstants.JSON.CUSTOM_FIELD_VALUES)
             );
         }
     }
@@ -250,10 +250,7 @@ public class CompanyParser {
         }
         String value = jsonObject.getString(ParserConstants.JSON.VALUE);
         Set<String> trueValues = Set.of("Да","В браке","В стадии ликвидации");
-        if(trueValues.contains(value)){
-            return true;
-        }
-        else return false;
+        return trueValues.contains(value);
     }
 
     private Integer getIntegerValue(String id) {

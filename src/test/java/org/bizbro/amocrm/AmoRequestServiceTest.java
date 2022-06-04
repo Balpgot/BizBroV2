@@ -60,4 +60,9 @@ public class AmoRequestServiceTest {
         }
     }
 
+    @Test
+    public void testGetLeadNotes(){
+        System.out.println(requestService.getLeadNotes("19030707"));
+    }
+
 }

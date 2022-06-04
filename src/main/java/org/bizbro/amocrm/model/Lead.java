@@ -17,34 +17,37 @@ import java.util.Set;
 @Table(name = "lead")
 public class Lead {
     @Id
-    private Long ID;
-    private String NAME;
-    private Integer BUDGET;
-    private Integer VORONKA;
-    private Long CONTACT_ID;
+    private Long id;
+    private String name;
+    private Integer budget;
+    private Integer voronka;
+    private Long contactId;
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinTable(
             name = "lead_tag",
             joinColumns = {@JoinColumn(name = "lead_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")}
     )
-    private Set<Tag> TAGS;
+    private Set<Tag> tags;
+    @OneToMany(mappedBy = "id")
+    private Set<Note> notes;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Lead lead = (Lead) o;
-        return ID.equals(lead.ID) &&
-                Objects.equals(NAME, lead.NAME) &&
-                Objects.equals(BUDGET, lead.BUDGET) &&
-                Objects.equals(VORONKA, lead.VORONKA) &&
-                Objects.equals(CONTACT_ID, lead.CONTACT_ID) &&
-                Objects.equals(TAGS, lead.TAGS);
+        return id.equals(lead.id) &&
+                Objects.equals(name, lead.name) &&
+                Objects.equals(budget, lead.budget) &&
+                Objects.equals(voronka, lead.voronka) &&
+                Objects.equals(contactId, lead.contactId) &&
+                Objects.equals(tags, lead.tags) &&
+                Objects.equals(notes, lead.notes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ID);
+        return Objects.hash(id);
     }
 }

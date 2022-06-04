@@ -2,7 +2,6 @@ package org.bizbro.amocrm.model;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -27,7 +26,7 @@ public class Company {
     private String city;
     private String sno;
     private Long registrationDate;
-    private Boolean hasOborot = false;
+    private Boolean hasOborot;
     @OneToMany(mappedBy = "id")
     private Set<Oborot> oboroty;
     private String address;
@@ -82,8 +81,6 @@ public class Company {
     private String post;
     private Boolean odinC;
     private Boolean dopScheta;
-    @Column(columnDefinition = "text")
-    private String notesString;
     private Boolean isDeleted;
     private Boolean isPosted;
 
@@ -128,7 +125,6 @@ public class Company {
                 Objects.equals(post, company.post) &&
                 Objects.equals(odinC, company.odinC) &&
                 Objects.equals(dopScheta, company.dopScheta) &&
-                Objects.equals(notesString, company.notesString) &&
                 Objects.equals(isDeleted, company.isDeleted) &&
                 Objects.equals(isPosted, company.isPosted);
     }
